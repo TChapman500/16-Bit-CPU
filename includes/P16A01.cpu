@@ -1,0 +1,197 @@
+#bits 16
+#subruledef reg
+{
+	r0 => 0
+	r1 => 1
+	r2 => 2
+	r3 => 3
+	r4 => 4
+	r5 => 5
+	r6 => 6
+	r7 => 7
+	r8 => 8
+	r9 => 9
+	r10 => 10
+	r11 => 11
+	r12 => 12
+	r13 => 13
+	r14 => 14
+	r15 => 15
+	sp  => 15
+}
+
+#subruledef jump
+{
+	; Unconditional
+	JMP => 0
+	
+	; Equal/Zero
+	JE  => 1
+	JZ  => 1
+	
+	; Not Equal/Not Zero
+	JNE => 2
+	JNZ => 2
+	
+	; Less/Carry
+	JL  => 3
+	JC  => 3
+	
+	; Not Less/Not Carry
+	JNL => 4
+	JNC => 4
+	
+	; Greater, Not Greater
+	JG  => 5
+	JNG => 6
+	
+	; Odd, Not Odd
+	JO  => 7
+	JNO => 8
+	
+	; Odd Parity, Not Odd Parity
+	JP  => 9
+	JNP => 10
+	
+	; Negative, Not Negative
+	JN  => 11
+	JNN => 12
+	
+	; Low Byte Zero, High Byte Zero
+	JLZ => 13
+	JHZ => 14
+}
+
+; 2-Operand Instructions (X and Y registers)
+#subruledef alu1
+{
+	ADD  => 64
+	ADC  => 65
+	SUB  => 68
+	SBB  => 69
+	
+	AND  => 72
+	OR   => 73
+	XOR  => 74
+	
+	SHR  => 76
+	SAR  => 78
+	SHL  => 80
+	SAL  => 82
+	
+	ROR  => 84
+	ROL  => 86
+	
+	CMP  => 88
+	CMPS => 89
+	TEST => 90
+}
+
+; 1-Operand Instructions
+#subruledef alu2
+{
+	INC  => 66
+	ABS  => 67
+	DEC  => 70
+	NEG  => 71
+	NOT  => 75
+	TEST => 91
+}
+
+; 2-Operand Instructions (X register, Y value)
+#subruledef alu3
+{
+	SHR  => 77
+	SAR  => 79
+	SHL  => 81
+	SAL  => 83
+	ROR  => 85
+	ROL  => 87
+}
+
+#ruledef DemoCPU
+{
+	; CPU Control
+	NOP				=> 0x0000
+	BRK				=> 0x0100
+	HLT				=> 0x0200
+	
+	; Interrupt Handling
+	ISR	edge, {imm16}		=> 0x0300 @ imm16`16
+	ISR	level, {imm16}		=> 0x0310 @ imm16`16
+	SINT	0			=> 0x0400
+	SINT	1			=> 0x0410
+	INT				=> 0x0500
+	RTI				=> 0x0600
+	
+	; Functions
+	CALL	{imm16}			=> 0x0700 @ imm16`16
+	CALL	{rX : reg}		=> 0x071 @ rX`4
+	RET				=> 0x0800
+	
+	; Branching
+	{cond : jump}	{imm16}		=> 0x09 @ cond`4 @ 0x0 @ imm16`16
+	{cond : jump}	{rX : reg}	=> 0x0A @ cond`4 @ rX`4 @ imm16`16
+	
+	; Loops
+	LOOP	{rX : reg}, {rY : reg}, {imm16}	=> 0x0B @ rY`4 @ rX`4 @ imm16`16
+	LOOPD	{rX : reg}, {rY : reg}, {imm16}	=> 0x0C @ rY`4 @ rX`4 @ imm16`16
+	LOOPZ	{rX : reg}, {imm16}		=> 0x0D @ 0x0 @ rX`4 @ imm16`16
+	
+	; Stack Management
+	PUSH	{rX : reg}		=> 0x0E0 @ rX`4
+	PUSH	flags			=> 0x0E10
+	POP	{rX : reg}		=> 0x0F0 @ rX`4
+	POP	flags			=> 0x0F10
+	
+	; Register Copy
+	MOV	{rX : reg}, flags	=> 0x100 @ rX`4
+	MOV	flags, {rX : reg}	=> 0x101 @ rX`4
+	MOV	{rX : reg}, {rY : reg}	=> 0x11 @ rY`4 @ rX`4
+	
+	; Load Data
+	LD	{rX : reg}, {imm16}			=> 0x140 @ rX`4 @ imm16`16
+	LD	{rX : reg}, [{imm16}]			=> 0x150 @ rX`4 @ imm16`16
+	LD	{rX : reg}, [{rY : reg}]		=> 0x16 @ rY`4 @ rX`4
+	LD	{rX : reg}, [{rY : reg} + {imm16}]	=> 0x17 @ rY`4 @ rX`4 @ imm16`16
+	LDP	{rX : reg}, [{imm16}]			=> 0x190 @ rX`4 @ imm16`16
+	LDP	{rX : reg}, [{rY : reg}]		=> 0x1A @ rY`4 @ rX`4
+	LDP	{rX : reg}, [{rY : reg} + {imm16}]	=> 0x1B @ rY`4 @ rX`4 @ imm16`16
+	
+	; Store Data
+	ST	[{imm16}], {rX : reg}			=> 0x1D0 @ rX`4 @ imm16`16
+	ST	[{rY : reg}], {rX : reg}		=> 0x1E @ rY`4 @ rX`4
+	ST	[{rY : reg} + {imm16}], {rX : reg}	=> 0x1F @ rY`4 @ rX`4 @ imm16`16
+	STP	[{imm16}], {rX : reg}			=> 0x210 @ rX`4 @ imm16`16
+	STP	[{rY : reg}], {rX : reg}		=> 0x22 @ rY`4 @ rX`4
+	STP	[{rY : reg} + {imm16}], {rX : reg}	=> 0x23 @ rY`4 @ rX`4 @ imm16`16
+	
+	; Extended Bit-Manipulation Memory Mapping
+	EBIA	{rX : reg}, {imm16}	=> 0x2E0 @ rX`4
+	EBIA	{rX : reg}, {rY : reg}	=> 0x2F @ rY`4 @ rX`4
+	
+	; Bit-Manipulation
+	CBI	{rX : reg}, {rY : reg}	=> 0x30 @ rY`4 @ rX`4
+	SBI	{rX : reg}, {rY : reg}	=> 0x31 @ rY`4 @ rX`4
+	TBI	{rX : reg}, {rY : reg}	=> 0x32 @ rY`4 @ rX`4
+	IBI	{rX : reg}, {rY : reg}	=> 0x33 @ rY`4 @ rX`4
+	CBI	{rX : reg}, {Y}		=> 0x34 @ Y`4 @ rX`4
+	SBI	{rX : reg}, {Y}		=> 0x35 @ Y`4 @ rX`4
+	TBI	{rX : reg}, {Y}		=> 0x36 @ Y`4 @ rX`4
+	IBI	{rX : reg}, {Y}		=> 0x37 @ Y`4 @ rX`4
+	
+	; Extended Bit-Manipulation
+	CBIX	{rX : reg}, {rY : reg}	=> 0x38 @ rY`4 @ rX`4
+	SBIX	{rX : reg}, {rY : reg}	=> 0x39 @ rY`4 @ rX`4
+	TBIX	{rX : reg}, {rY : reg}	=> 0x3A @ rY`4 @ rX`4
+	IBIX	{rX : reg}, {rY : reg}	=> 0x3B @ rY`4 @ rX`4
+	CBIX	{rX : reg}, {Y}		=> 0x3C @ Y`4 @ rX`4
+	SBIX	{rX : reg}, {Y}		=> 0x3D @ Y`4 @ rX`4
+	TBIX	{rX : reg}, {Y}		=> 0x3E @ Y`4 @ rX`4
+	IBIX	{rX : reg}, {Y}		=> 0x3F @ Y`4 @ rX`4
+	
+	; Arithmetic Operations
+	{aop : alu1}	{rX : reg}, {rY : reg}		=> aop`8 @ rY`4 @ rX`4
+	{aop : alu3}	{rX : reg}, {Y}			=> aop`8 @ Y`4 @ rX`4
+	{aop : alu2}	{rX : reg}			=> aop`8 @ 0x0 @ rX`4
+}
