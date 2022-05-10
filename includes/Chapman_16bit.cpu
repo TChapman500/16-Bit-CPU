@@ -109,7 +109,7 @@
 	ROL  => 87
 }
 
-#ruledef DemoCPU
+#ruledef Chapman_16bit
 {
 	; CPU Control
 	NOP				=> 0x0000
