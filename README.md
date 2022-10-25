@@ -14,9 +14,9 @@ Does nothing.
 ### `ISR` (Interrupt Service Routine)
 Sets the address of the interrupt service routine (interrupt handler) with the immediate byte being the address of the function to serve as the ISR.  The ISR must use the `RTI` instruction to return rather than the `RET` instruction.
 
-| Assembly | Opcode   |
-| -------- | -------- |
-| `ISR`    | `0x01`   |
+| Assembly    | Opcode   |
+| ----------- | -------- |
+| `ISR imm16` | `0x01`   |
 
 ### `INT` (Interrupt)
 Enables or disables the interrupt service system (ISS) or calls the ISR.  These instructions should never be used inside the interrupt handler.  When the ISR is called, interrupts are disabled until the ISR returns through the `RTI` instruction.
