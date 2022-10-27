@@ -84,11 +84,29 @@ Pops the top of the stack to a register
 | `POP rX`      | `0x11`   | `0x0`  | Pops the top of the stack to `rX`.                 |
 | `POP flags`   | `0x11`   | `0x1`  | Pops the top of the stack to the flags register.   |
 
+### `Jyy` (Jump)
+Conditional or unconditional jump to the target address specified either by the immediate byte or the value of the register selected by the X operand.  The `Y` operand is the jump condition.
 
+| Assembly    | Y Op  | Condition                                       |
+| ----------- | ----- | ----------------------------------------------- |
+| `JMP`       | `0x0` | Unconditional jump.                             |
+| `JZ`/`JE`   | `0x1` | Jump if zero flag is set/jump if equal.         |
+| `JNZ`/`JNE' | `0x2` | Jump if zero flag is cleared/jump if not equal. |
+| `JC`/`JL`   | `0x3` | Jump if carry flag is set/jump if less.         |
+| `JNC`/`JNL` | `0x4` | Jump if carry flag is cleared/jump if not less. |
+| `JG`        | `0x5` | Jump if greater.                                |
+| `JNG`       | `0x6` | Jump if not greater.                            |
 
+| Assembly    | Opcode | Description                    |
+| ----------- | ------ | ------------------------------ |
+| `Jyy imm16` | `0x12` | Jump to the immediate address. |
+| `Jyy rX`    | `0x13` | Jump to the address in `rX`.   |
 
+### `MOV` (Move/Copy)
+Copies the value of one register to a different register.  This can be between registers in the register file or between the register file and the flags register.
 
-
-
-
-
+| Assembly        | Opcode | Description                                                                              |
+| --------------- | ------ | ---------------------------------------------------------------------------------------- |
+| `MOV rX, flags` | `0x14` | Copies the flags register to the register `rX` in the register file.                     |
+| `MOV flags, rX` | `0x15` | Copies the register `rX` in the register file to the flags register.                     |
+| `MOV rX, rY`    | `0x16` | Copies the register `rY` in the register file to the register `rX` in the register file. |
