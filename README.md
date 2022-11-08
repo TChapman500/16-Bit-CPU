@@ -190,4 +190,66 @@ Negates the X operand and stores the result in the register specified by the X o
 | --------------- | ------ | --------------------------------------- |
 | `NEG rX`        | `0x27` | Negates `rX` stores the result in `rX`. |
 
+### `SHL`/`SAL` (Shift Left)
+Shifts the X operand by up to 15 bits to the left and stores the result in the X operand.
 
+| Assembly        | Opcode | Description                                                                                                   |
+| --------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| `SHL rX, rY`    | `0x28` | Shifts `rX` left by the value in `rY` and stores the result in `rX`.                                          |
+| `SHL rX, Y`     | `0x29` | Shifts `rX` left by the amount specified by the Y operand and stores the result in `rX`.                      |
+| `SAL rX, rY`    | `0x2A` | Shifts `rX` left by the value in `rY` and stores the result in `rX`, preserving the sign.                     |
+| `SAL rX, Y`     | `0x2B` | Shifts `rX` left by the amount specified by the Y operand and stores the result in `rX`, preserving the sign. |
+
+### `SHR`/`SAR` (Shift Right)
+Shifts the X operand by up to 15 bits to the right and stores the result in the X operand.
+
+| Assembly        | Opcode | Description                                                                                                    |
+| --------------- | ------ | -------------------------------------------------------------------------------------------------------------- |
+| `SHR rX, rY`    | `0x2C` | Shifts `rX` right by the value in `rY` and stores the result in `rX`.                                          |
+| `SHR rX, Y`     | `0x2D` | Shifts `rX` right by the amount specified by the Y operand and stores the result in `rX`.                      |
+| `SAR rX, rY`    | `0x2E` | Shifts `rX` right by the value in `rY` and stores the result in `rX`, preserving the sign.                     |
+| `SAR rX, Y`     | `0x2F` | Shifts `rX` right by the amount specified by the Y operand and stores the result in `rX`, preserving the sign. |
+
+### 'ROL`/`ROR` (Rotate)
+Shifts the X operand left or right by up to 15 bits.  And bits shifted out on one side will be shifted in on the other side in the same order.  The results are stored in the X operand.
+
+| Assembly        | Opcode | Description                                                                                |
+| --------------- | ------ | ------------------------------------------------------------------------------------------ |
+| `ROL rX, rY`    | `0x30` | Rotates `rX` left by the value in `rY` and stores the result in `rX`.                      |
+| `ROL rX, Y`     | `0x31` | Rotates `rX` left by the amount specified by the Y operand and stores the result in `rX`.  |
+| `ROR rX, rY`    | `0x32` | Rotates `rX` right by the value in `rY` and stores the result in `rX`.                     |
+| `ROR rX, Y`     | `0x33` | Rotates `rX` right by the amount specified by the Y operand and stores the result in `rX`. |
+
+### `AND`/`OR`/`XOR`/`NOT` (Boolean Logic)
+Performs boolean operations with the X and Y operands (except for the `NOT` instruction, which ignores the Y operand) and stores the result in the X operand.
+
+| Assembly        | Opcode | Description                                                   |
+| --------------- | ------ | ------------------------------------------------------------- |
+| `AND rX, rY`    | `0x34` | ANDs `rX` with `rY` and stores the result in `rX`.            |
+| `OR  rX, rY`    | `0x35` | ORs `rX` with `rY` and stores the result in `rX`.             |
+| `XOR rX, rY`    | `0x36` | XORs `rX` with `rY` and stores the result in `rX`.            |
+| `NOT rX`        | `0x37` | Flips all of the bits of `rX` and stores the results in `rX`. |
+
+### `CMP`/`CMPS`/`TEST` (Compare)
+Compares two numbers to each other and sets the appropriate flags, but does not write to the register file.  The `TEST` instruction also has two variants:  One which ANDs two numbers together, and the other which passes the X operand directly to the output.
+
+| Assembly        | Opcode | Description                                                                          |
+| --------------- | ------ | ------------------------------------------------------------------------------------ |
+| `CMP  rX, rY`   | `0x38` | Subtracts `rY` from `rX`, writing to the flags register only.                        |
+| `CMPS rX, rY`   | `0x39` | Subtracts `rY` from `rX`, noting their signs and writing to the flags register only. |
+| `TEST rX, rY`   | `0x3A` | ANDs `rX` with `rY`, writing to the flags register only.                             |
+| `TEST rX`       | `0x3B` | Passes `rX` directly to the ALU's output, writing to the flags register only.        |
+
+### `BRK` (Debug Break)
+Temporarilly halts the processor to aid in debugging a program.  The processor will remain halted until the CPU receives a resume signal.
+
+| Assembly        | Opcode | Description                              |
+| --------------- | ------ | ---------------------------------------- |
+| `BRK`           | `0xFE` | Temporarilly suspends program execution. |
+
+### `HLT` (Halt)
+Stops execution of the processor until the processor is reset.  Unlike with the `BRK` instruciton, once a `HLT` instruction is received, there is no way to resume a program.  The processor must be reset.
+
+| Assembly        | Opcode | Description                              |
+| --------------- | ------ | ---------------------------------------- |
+| `HLT`           | `0xFF` | Perpanently suspends program execution.  |
