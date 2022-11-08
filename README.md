@@ -1,4 +1,5 @@
 # 16-Bit CPU
+This CPU circuit was made using [Logisim Evolution (Holy Cross Edition)](https://github.com/kevinawalsh/logisim-evolution) (v4.0.4).  The circuit might work in the original [Logisim Evolution](https://github.com/kevinawalsh/logisim-evolution), but I have not tested that.  This CPU was implemented with an FPGA in mind, so there is no microcode in the circuit, and there is only one tri-state buffer, which is on the main data bus just before the data leaves the CPU.
 
 ## Architecture
 This CPU has a 16-bit data bus and a 16-bit address bus.  Non-pipelined versions of the processor have a 4-step stepper to control the sequence of the internal and external control signals.  Also, on non-pipelined versions of the CPU, the line for the first step of the stepper is exposed to the outside environement through a buffer.
