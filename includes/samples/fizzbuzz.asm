@@ -36,6 +36,7 @@ print_fizzbuzz:
 	PUSH	r0
 	CALL	printf
 ..switch_end:
+	INC	r12
 	CMP	r12, r13
 	JNG	.main_loop
 	RET
