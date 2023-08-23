@@ -57,7 +57,9 @@ Returns from the interrupt service routine/interrupt handler function (ISR).  Th
 | `RET`         | `0x05`   | `0x1`  |
 
 ## `CPUID` (CPU Information)
-For CPU models that have this instruction implemented, will set a non-zero value into the destination register.  If the descriptor index is greater than zero, then the value set into the destination register will be `-1` for descriptor indices that are not used, and a value with bit `15` cleared for descriptor indices that are used.  If descriptor index `1` returns `-1`, then there is no need to check any of the remaining descriptor indices.  To use this instruction, first you must zero-out the destination register, then call `CPUID` with a `Y` of `0`.  If `CPUID` is not implemented, then it will act as a `NOP` instruction and not write any values to the destination register.
+For CPU models that implement this instruction, a non-zero value will be set into the destination register.  If the descriptor index is greater than zero, then the value set into the destination register will be `-1` for descriptor indices that are not used, and a value with bit `15` cleared for descriptor indices that are used.  If descriptor index `1` returns `-1`, then there is no need to check any of the remaining descriptor indices.  To use this instruction, first you must zero-out the destination register, then call `CPUID` with a `Y` of `0`.  If `CPUID` is not implemented, then it will act as a `NOP` instruction and not write any values to the destination register.
+
+`CPUID` can be implemented, but without using all of the descriptor indices.  When `CPUID` is implemented, but called with an index that is not used by the CPU, then `CPUID` will write `-1` into the destination register.  If `CPUID` is not implemented on the CPU that you are using, then the destination register will not be updated.  For now, CPUs that implement this instruction only use index `0`.  The remaining indices will have a value of `-1`.  These extra indices exist to allow the descriptor to be expanded in the future.
 
 | Assembly      | Opcode | Description                           |
 | ------------- | ------ | ------------------------------------- |
@@ -72,7 +74,13 @@ Index `0` has the following format:
 | `6`    | Extended ALU Instruction Set                                                             |
 | `5:0`  | Unused, Always 0
 
-Right now, only index `0` is used.  The rest will return `-1`, if the `CPUID` instruction is implemented.
+The "Instruction Loading Type" refers to how an instruction is loaded and executed by the CPU.  The "Normal" and "Stepper Reset" types use a 4-stage stepper to load and execute the instruction.  The "Normal" type does not have any special logic to reset the stepper to step 1.  As a result, all instructions will take 4 steps, even if they finish earlier.  The "Stepper Reset" type has special logic to generate a reset signal on steps 2 and 3, which can be inhibited by certain instructions that require more than 2 or 3 clock cycles to execute.  The "Pipeline" type uses an instruction pipeline to execute up to 1 instruction per clock cycle.
+
+Example Use:
+```asm
+XOR	r0, r0		; Clear destination register to prevent confusion about whether the instruction is implemented.
+CPUID	r0, 0		; Copy the value at index 0 into destination register.  If CPUID is not implemented, destination register will remain zero.
+```
 
 ## `LD` (Load)
 Loads a byte into a register in the register file from memory.
