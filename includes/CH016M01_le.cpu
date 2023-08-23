@@ -1,0 +1,123 @@
+#bankdef main
+{
+	#bits 16
+	#outp 0x0000
+}
+
+#subruledef register
+{
+	r0 => 0x0
+	r1 => 0x1
+	r2 => 0x2
+	r3 => 0x3
+	r4 => 0x4
+	r5 => 0x5
+	r6 => 0x6
+	r7 => 0x7
+	r8 => 0x8
+	r9 => 0x9
+	r10 => 0xA
+	r11 => 0xB
+	r12 => 0xC
+	r13 => 0xD
+	r14 => 0xE
+	r15 => 0xF
+}
+
+#subruledef jcond
+{
+	JMP => 0x0
+	JZ => 0x1
+	JE => 0x1
+	JNZ => 0x2
+	JNE => 0x2
+	JC => 0x3
+	JL => 0x3
+	JNC => 0x4
+	JNL => 0x4
+	JG => 0x5
+	JNG => 0x6
+}
+
+#subruledef aluop_2
+{
+	ADD	=> 0x20
+	ADC	=> 0x21
+	SUB	=> 0x24
+	SBB	=> 0x25
+	SHL	=> 0x28
+	SAL	=> 0x2A
+	SHR	=> 0x2C
+	SAR	=> 0x2F
+	ROL	=> 0x30
+	ROR	=> 0x32
+	AND	=> 0x34
+	OR	=> 0x35
+	XOR	=> 0x36
+	CMP	=> 0x38
+	CMPS	=> 0x39
+	TEST	=> 0x3A
+}
+
+#subruledef aluop_shift
+{
+	SHL	=> 0x29
+	SAL	=> 0x2B
+	SHR	=> 0x2D
+	SAR	=> 0x2E
+	ROL	=> 0x31
+	ROR	=> 0x33
+}
+
+#subruledef aluop_1
+{
+	INC	=> 0x22
+	ABS	=> 0x23
+	DEC	=> 0x26
+	NEG	=> 0x27
+	NOT	=> 0x37
+	TEST	=> 0x3B
+}
+
+#ruledef CH016M01_CPU
+{
+	NOP			=> 0x0000
+	ISR	{imm16: i16}	=> 0x00 @ 0x01 @ le(imm16)
+	INT	0		=> 0x00 @ 0x02
+	INT	1		=> 0x10 @ 0x02
+	INT			=> 0x00 @ 0x03
+	CALL	{imm16: i16}	=> 0x00 @ 0x04 @ le(imm16)
+	CALL	{rX: register}	=> 0x1  @ rX   @ 0x04
+	RET			=> 0x00 @ 0x05
+	RTI			=> 0x10 @ 0x05
+	
+	CPUID	{rX: register}, {Y: i4}		=> Y @ rX @ 0x06
+	
+	LD	{rX: register}, {imm16: i16}			=> 0x0 @ rX @ 0x08 @ le(imm16)
+	LD	{rX: register}, [{imm16: i16}]			=> 0x0 @ rX @ 0x09 @ le(imm16)
+	LD	{rX: register}, [{rY: register}]		=> rY  @ rX @ 0x0A
+	LD	{rX: register}, [{rY: register} + {imm16: i16}]	=> rY  @ rX @ 0x0B @ le(imm16)
+	
+	ST	[{imm16: i16}], {rX: register}			=> 0x0 @ rX @ 0x0D @ le(imm16)
+	ST	[{rY: register}], {rX: register} 		=> rY  @ rX @ 0x0E @
+	ST	[{rY: register} + {imm16: i16}], {rX: register}	=> rY  @ rX @ 0x0F @ le(imm16)
+	
+	PUSH	{rX: register}	=> 0x0  @ rX @ 0x10
+	PUSH	flags		=> 0x10 @ 0x10
+	POP	{rX: register}	=> 0x0  @ rX @ 0x11 
+	POP	flags		=> 0x10 @ 0x11 
+	
+	{JUMP: jcond}	{imm16: i16}	=> JUMP @ 0x0 @ 0x12 @  le(imm16)
+	{JUMP: jcond}	{rX: register}	=> JUMP @ rX  @ 0x13
+	
+	MOV	{rX: register}, flags		=> 0x0 @ rX @ 0x14
+	MOV	flags, {rX: register}		=> 0x0 @ rX @ 0x15
+	MOV	{rX: register}, {rY: register}	=> rY  @ rX @ 0x16
+	
+	{op: aluop_2}		{rX: register}, {rY: register}	=> rY  @ rX @ op
+	{op: aluop_shift}	{rX: register}, {Y: i4}		=> Y   @ rX @ op
+	{op: aluop_1}		{rX: register}			=> 0x0 @ rX @ op
+	
+	BRK	=> 0x00 @ 0xFE
+	HLT	=> 0x00 @ 0xFF
+}

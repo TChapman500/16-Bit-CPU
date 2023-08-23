@@ -1,4 +1,4 @@
-#include "CH016M01.cpu"
+#include "CH016M01_be.cpu"
 
 ; Reference addresses
 OUT_REG = 0x7FFE
