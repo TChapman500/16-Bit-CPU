@@ -67,7 +67,7 @@ Index `0` has the following format:
 
 | Bits   | Description                                                                              |
 | ------ | ---------------------------------------------------------------------------------------- |
-| `15:9` | CPUs M Number (01-99)                                                                     |
+| `15:9` | CPUs M Number (01-99)                                                                    |
 | `8:7`  | Instruction Loading Type (0 = Normal, 1 = Stepper Reset Logic, 2 = Instruction Pipeline) |
 | `6`    | Extended ALU Instruction Set                                                             |
 | `5:0`  | Unused, Always 0
