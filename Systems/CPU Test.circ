@@ -1917,7 +1917,7 @@ d00 2001 b21 2a 800 f 3802 1250
       <visible-register height="20" path="/Register(1120,1060)" stroke-width="0" value-font-family="Monospaced" value-font-size="20" value-font-weight="bold" width="53" x="200" y="230"/>
       <visible-register height="20" path="/Register(1120,1170)" stroke-width="0" value-font-family="Monospaced" value-font-size="20" value-font-weight="bold" width="53" x="147" y="230"/>
       <circ-port height="10" pin="2150,360" width="10" x="325" y="95"/>
-      <circ-port height="10" pin="1220,170" width="10" x="325" y="115"/>
+      <circ-port height="10" pin="1260,170" width="10" x="325" y="115"/>
       <circ-port height="8" pin="1720,750" width="8" x="76" y="96"/>
       <circ-port height="8" pin="1680,480" width="8" x="76" y="306"/>
       <circ-port height="8" pin="1690,350" width="8" x="76" y="296"/>
@@ -2028,21 +2028,30 @@ Read Response:
       <a name="facing" val="west"/>
       <a name="incoming" val="32"/>
     </comp>
-    <comp lib="1" loc="(1220,170)" name="Pin">
+    <comp lib="1" loc="(1260,1180)" name="Constant">
+      <a name="value" val="0x0"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="1" loc="(1260,130)" name="Splitter">
+      <a name="appear" val="center"/>
+      <a name="bit1" val="0"/>
+      <a name="bit2" val="0"/>
+      <a name="bit3" val="0"/>
+      <a name="bit4" val="1"/>
+      <a name="facing" val="west"/>
+      <a name="incoming" val="5"/>
+    </comp>
+    <comp lib="1" loc="(1260,170)" name="Pin">
       <a name="facing" val="west"/>
       <a name="label" val="Interrupt"/>
       <a name="labelloc" val="east"/>
       <a name="type" val="output"/>
     </comp>
-    <comp lib="1" loc="(1260,1180)" name="Constant">
-      <a name="value" val="0x0"/>
-      <a name="width" val="32"/>
-    </comp>
-    <comp lib="1" loc="(1280,120)" name="Bit Extender">
-      <a name="in_width" val="4"/>
+    <comp lib="1" loc="(1300,130)" name="Bit Extender">
+      <a name="in_width" val="5"/>
       <a name="type" val="zero"/>
     </comp>
-    <comp lib="1" loc="(1290,120)" name="Tunnel">
+    <comp lib="1" loc="(1310,130)" name="Tunnel">
       <a name="label" val="INT_SOURCE"/>
       <a name="width" val="16"/>
     </comp>
@@ -2478,7 +2487,7 @@ Read Response:
     <wire from="(1120,120)" to="(1120,140)"/>
     <wire from="(1120,140)" to="(1120,170)"/>
     <wire from="(1120,140)" to="(1140,140)"/>
-    <wire from="(1120,170)" to="(1220,170)"/>
+    <wire from="(1120,170)" to="(1240,170)"/>
     <wire from="(1150,1150)" to="(1150,1160)"/>
     <wire from="(1150,1260)" to="(1150,1270)"/>
     <wire from="(1150,1270)" to="(1150,1280)"/>
@@ -2496,11 +2505,13 @@ Read Response:
     <wire from="(1190,130)" to="(1200,130)"/>
     <wire from="(1220,1100)" to="(1260,1100)"/>
     <wire from="(1230,120)" to="(1240,120)"/>
+    <wire from="(1240,130)" to="(1240,170)"/>
+    <wire from="(1240,170)" to="(1260,170)"/>
     <wire from="(1260,1100)" to="(1260,1160)"/>
     <wire from="(1260,1100)" to="(1380,1100)"/>
     <wire from="(1260,1160)" to="(1270,1160)"/>
     <wire from="(1260,1180)" to="(1270,1180)"/>
-    <wire from="(1280,120)" to="(1290,120)"/>
+    <wire from="(1300,130)" to="(1310,130)"/>
     <wire from="(1310,1170)" to="(1320,1170)"/>
     <wire from="(1340,1390)" to="(1350,1390)"/>
     <wire from="(1340,1410)" to="(1390,1410)"/>

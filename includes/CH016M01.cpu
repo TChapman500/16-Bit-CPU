@@ -1,4 +1,8 @@
-#bits 16
+#bankdef main
+{
+	#bits 16
+	#outp 0x0000
+}
 
 #subruledef register
 {
@@ -31,10 +35,8 @@
 	JL => 0x3
 	JNC => 0x4
 	JNL => 0x4
-	JGE => 0x4
 	JG => 0x5
 	JNG => 0x6
-	JLE => 0x6
 }
 
 #subruledef aluop_2
@@ -80,30 +82,30 @@
 #ruledef CH016M01_CPU
 {
 	NOP			=> 0x0000
-	ISR	{imm16: i16}	=> 0x01 @ 0x00 @ le(imm16)
+	ISR	{imm16: i16}	=> 0x01 @ 0x00 @ imm16
 	INT	0		=> 0x02 @ 0x00
 	INT	1		=> 0x02 @ 0x10
 	INT			=> 0x03 @ 0x00
-	CALL	{imm16: i16}	=> 0x04 @ 0x00 @ le(imm16)
+	CALL	{imm16: i16}	=> 0x04 @ 0x00 @ imm16
 	CALL	{rX: register}	=> 0x04 @ 0x1  @ rX
 	RET			=> 0x05 @ 0x00
 	RTI			=> 0x05 @ 0x10
 	
-	LD	{rX: register}, {imm16: i16}			=> 0x08  @ 0x0 @ rX @ le(imm16)
-	LD	{rX: register}, [{imm16: i16}]			=> 0x09  @ 0x0 @ rX @ le(imm16)
+	LD	{rX: register}, {imm16: i16}			=> 0x08  @ 0x0 @ rX @ imm16
+	LD	{rX: register}, [{imm16: i16}]			=> 0x09  @ 0x0 @ rX @ imm16
 	LD	{rX: register}, [{rY: register}]		=> 0x0A  @ rY  @ rX
-	LD	{rX: register}, [{rY: register} + {imm16: i16}]	=> 0x0B  @ rY  @ rX @ le(imm16)
+	LD	{rX: register}, [{rY: register} + {imm16: i16}]	=> 0x0B  @ rY  @ rX @ imm16
 	
-	ST	[{imm16: i16}], {rX: register}			=> 0x0D  @ 0x0 @ rX @ le(imm16)
+	ST	[{imm16: i16}], {rX: register}			=> 0x0D  @ 0x0 @ rX @ imm16
 	ST	[{rY: register}], {rX: register} 		=> 0x0E  @ rY  @ rX
-	ST	[{rY: register} + {imm16: i16}], {rX: register}	=> 0x0F  @ rY  @ rX @ le(imm16)
+	ST	[{rY: register} + {imm16: i16}], {rX: register}	=> 0x0F  @ rY  @ rX @ imm16
 	
 	PUSH	{rX: register}	=> 0x10 @ 0x0 @ rX
 	PUSH	flags		=> 0x10 @ 0x10
 	POP	{rX: register}	=> 0x11 @ 0x0 @ rX
 	POP	flags		=> 0x11 @ 0x10
 	
-	{JUMP: jcond}	{imm16: i16}	=> 0x12 @ JUMP @ 0x0 @ le(imm16)
+	{JUMP: jcond}	{imm16: i16}	=> 0x12 @ JUMP @ 0x0 @ imm16
 	{JUMP: jcond}	{rX: register}	=> 0x13 @ JUMP @ rX
 	
 	MOV	{rX: register}, flags		=> 0x14 @ 0x0 @ rX

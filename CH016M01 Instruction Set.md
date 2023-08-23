@@ -56,6 +56,24 @@ Returns from the interrupt service routine/interrupt handler function (ISR).  Th
 | ------------- | -------- | ------ |
 | `RET`         | `0x05`   | `0x1`  |
 
+## `CPUID` (CPU Information)
+For CPU models that have this instruction implemented, will set a non-zero value into the destination register.  If the descriptor index is greater than zero, then the value set into the destination register will be `-1` for descriptor indices that are not used, and a value with bit `15` cleared for descriptor indices that are used.  If descriptor index `1` returns `-1`, then there is no need to check any of the remaining descriptor indices.  To use this instruction, first you must zero-out the destination register, then call `CPUID` with a `Y` of `0`.  If `CPUID` is not implemented, then it will act as a `NOP` instruction and not write any values to the destination register.
+
+| Assembly      | Opcode | Description                           |
+| ------------- | ------ | ------------------------------------- |
+| `CPUID rX, Y` | `0x06` | Loads descriptor index `Y` into `rX`. |
+
+Index `0` has the following format:
+
+| Bits   | Description                                                                              |
+| ------ | ---------------------------------------------------------------------------------------- |
+| `15:9` | CPUs M Number (01-99)                                                                     |
+| `8:7`  | Instruction Loading Type (0 = Normal, 1 = Stepper Reset Logic, 2 = Instruction Pipeline) |
+| `6`    | Extended ALU Instruction Set                                                             |
+| `5:0`  | Unused, Always 0
+
+Right now, only index `0` is used.  The rest will return `-1`, if the `CPUID` instruction is implemented.
+
 ## `LD` (Load)
 Loads a byte into a register in the register file from memory.
 
