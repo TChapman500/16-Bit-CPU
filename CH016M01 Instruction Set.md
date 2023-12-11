@@ -69,10 +69,10 @@ Index `0` has the following format:
 
 | Bits   | Description                                                                              |
 | ------ | ---------------------------------------------------------------------------------------- |
-| `14:8` | CPUs M Number (01-99)                                                                    |
-| `7:6`  | Instruction Loading Type (0 = Normal, 1 = Stepper Reset Logic, 2 = Instruction Pipeline) |
-| `5`    | Extended ALU Instruction Set                                                             |
-| `4:0`  | Unused, Always 0
+| `15:9` | CPUs M Number (01-99)                                                                    |
+| `8:7`  | Instruction Loading Type (0 = Normal, 1 = Stepper Reset Logic, 2 = Instruction Pipeline) |
+| `6`    | Extended ALU Instruction Set                                                             |
+| `5:0`  | Unused, Always 0
 
 The "Instruction Loading Type" refers to how an instruction is loaded and executed by the CPU.  The "Normal" and "Stepper Reset" types use a 4-stage stepper to load and execute the instruction.  The "Normal" type does not have any special logic to reset the stepper to step 1.  As a result, all instructions will take 4 steps, even if they finish earlier.  The "Stepper Reset" type has special logic to generate a reset signal on steps 2 and 3, which can be inhibited by certain instructions that require more than 2 or 3 clock cycles to execute.  The "Pipeline" type uses an instruction pipeline to execute up to 1 instruction per clock cycle.
 
