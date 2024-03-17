@@ -1,5 +1,5 @@
 # Instruction Set
-The following table describes the format of the instruction byte.  Some instructions have an immediate byte following the instruction byte.  Any instruction not implemented will be interpreted as a `NOP` instruction.
+The following table describes the format of the instruction byte.  Some instructions have an immediate byte following the instruction byte.  Any instruction not implemented will be interpreted as a `NOP` instruction.  Instructions that are only part of the extended instruction set are marked with "(Extended Instruction)" in the instruction's description.
 
 | 15  |     |     |     |     |     |     |  8  |  7  |     |     |  4  |  3  |     |     |  0  |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -147,10 +147,12 @@ Copies the value of one register to a different register.  This can be between r
 ## `ADD`/`ADC` (Add without/with carry)
 Adds the value of two registers in the register file together and stores the results in the register specified by the X operand.  This instruction may optionally add `1` to the result if the carry flag in the flags register is set.
 
-| Assembly        | Opcode | Description                                                         |
-| --------------- | ------ | ------------------------------------------------------------------- |
-| `ADD rX, rY`    | `0x20` | Adds `rY` tp `rX` and stores the result in `rX`.                    |
-| `ADC rX, rY`    | `0x21` | Adds `rY` and the carry flag to `rX` and stores the result in `rX`. |
+| Assembly        | Opcode | Description                                                                                     |
+| --------------- | ------ | ----------------------------------------------------------------------------------------------- |
+| `ADD rX, rY`    | `0x20` | Adds `rY` tp `rX` and stores the result in `rX`.                                                |
+| `ADC rX, rY`    | `0x21` | Adds `rY` and the carry flag to `rX` and stores the result in `rX`.                             |
+| `ADD rX, imm16` | `0x40` | Adds `rY` tp `imm16` and stores the result in `rX`.  (Extended Instruction)                     |
+| `ADC rX, imm16` | `0x41` | Adds `rY` and the carry flag to `imm16` and stores the result in `rX`.   (Extended Instruction) |
 
 ## `INC`/ (Increment)
 Adds `1` to the X operand and stores the result in the register specified by the X operand.
@@ -169,10 +171,12 @@ If the X operand is negaive, it is negated and the results stored in the registe
 ## `SUB`/`SBB` (Subtract without/with carry)
 Subtracts the value of two registers in the register file and stores the results in the register specified by the X operand.  This instruction may optionally subtract `1` from the result if the carry flag in the flags register is set.  If the Y operand (unsigned) is greater than the X operand, then the carry flag is set.
 
-| Assembly        | Opcode | Description                                                                |
-| --------------- | ------ | -------------------------------------------------------------------------- |
-| `SBB rX, rY`    | `0x24` | Subtracts `rY` from `rX` and stores the result in `rX`.                    |
-| `SBB rX, rY`    | `0x25` | Subtracts `rY` and the carry flag from `rX` and stores the result in `rX`. |
+| Assembly        | Opcode | Description                                                                                            |
+| --------------- | ------ | ------------------------------------------------------------------------------------------------------ |
+| `SUB rX, rY`    | `0x24` | Subtracts `rY` from `rX` and stores the result in `rX`.                                                |
+| `SBB rX, rY`    | `0x25` | Subtracts `rY` and the carry flag from `rX` and stores the result in `rX`.                             |
+| `SUB rX, imm16` | `0x44` | Subtracts `rY` from `imm16` and stores the result in `rX`.  (Extended Instruction)                     |
+| `SBB rX, imm16` | `0x45` | Subtracts `rY` and the carry flag from `imm16` and stores the result in `rX`.   (Extended Instruction) |
 
 ## `DEC`/ (Decrement)
 Subtracts `1` from the X operand and stores the result in the register specified by the X operand.
@@ -221,22 +225,28 @@ Shifts the X operand left or right by up to 15 bits.  And bits shifted out on on
 ## `AND`/`OR`/`XOR`/`NOT` (Boolean Logic)
 Performs boolean operations with the X and Y operands (except for the `NOT` instruction, which ignores the Y operand) and stores the result in the X operand.
 
-| Assembly        | Opcode | Description                                                   |
-| --------------- | ------ | ------------------------------------------------------------- |
-| `AND rX, rY`    | `0x34` | ANDs `rX` with `rY` and stores the result in `rX`.            |
-| `OR  rX, rY`    | `0x35` | ORs `rX` with `rY` and stores the result in `rX`.             |
-| `XOR rX, rY`    | `0x36` | XORs `rX` with `rY` and stores the result in `rX`.            |
-| `NOT rX`        | `0x37` | Flips all of the bits of `rX` and stores the results in `rX`. |
+| Assembly        | Opcode | Description                                                                   |
+| --------------- | ------ | ----------------------------------------------------------------------------- |
+| `AND rX, rY`    | `0x34` | ANDs `rX` with `rY` and stores the result in `rX`.                            |
+| `OR  rX, rY`    | `0x35` | ORs `rX` with `rY` and stores the result in `rX`.                             |
+| `XOR rX, rY`    | `0x36` | XORs `rX` with `rY` and stores the result in `rX`.                            |
+| `NOT rX`        | `0x37` | Flips all of the bits of `rX` and stores the results in `rX`.                 |
+| `AND rX, imm16` | `0x54` | ANDs `rX` with `imm16` and stores the result in `rX`.  (Extended Instruction) |
+| `OR  rX, imm16` | `0x55` | ORs `rX` with `imm16` and stores the result in `rX`.  (Extended Instruction)  |
+| `XOR rX, imm16` | `0x56` | XORs `rX` with `imm16` and stores the result in `rX`.  (Extended Instruction) |
 
 ## `CMP`/`CMPS`/`TEST` (Compare)
 Compares two numbers to each other and sets the appropriate flags, but does not write to the register file.  The `TEST` instruction also has two variants:  One which ANDs two numbers together, and the other which passes the X operand directly to the output.
 
-| Assembly        | Opcode | Description                                                                          |
-| --------------- | ------ | ------------------------------------------------------------------------------------ |
-| `CMP  rX, rY`   | `0x38` | Subtracts `rY` from `rX`, writing to the flags register only.                        |
-| `CMPS rX, rY`   | `0x39` | Subtracts `rY` from `rX`, noting their signs and writing to the flags register only. |
-| `TEST rX, rY`   | `0x3A` | ANDs `rX` with `rY`, writing to the flags register only.                             |
-| `TEST rX`       | `0x3B` | Passes `rX` directly to the ALU's output, writing to the flags register only.        |
+| Assembly         | Opcode | Description                                                                                                     |
+| ---------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+| `CMP  rX, rY`    | `0x38` | Subtracts `rY` from `rX`, writing to the flags register only.                                                   |
+| `CMPS rX, rY`    | `0x39` | Subtracts `rY` from `rX`, noting their signs and writing to the flags register only.                            |
+| `TEST rX, rY`    | `0x3A` | ANDs `rX` with `rY`, writing to the flags register only.                                                        |
+| `TEST rX`        | `0x3B` | Passes `rX` directly to the ALU's output, writing to the flags register only.                                   |
+| `CMP  rX, imm16` | `0x58` | Subtracts `rY` from `imm16`, writing to the flags register only.   (Extended Instruction)                       |
+| `CMPS rX, imm16` | `0x59` | Subtracts `rY` from `imm16`, noting their signs and writing to the flags register only.  (Extended Instruction) |
+| `TEST rX, imm16` | `0x5A` | ANDs `rX` with `imm16`, writing to the flags register only.  (Extended Instruction)                             |
 
 ## `BRK` (Debug Break)
 Temporarilly halts the processor to aid in debugging a program.  The processor will remain halted until the CPU receives a resume signal.
