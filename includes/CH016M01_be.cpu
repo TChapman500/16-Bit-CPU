@@ -59,6 +59,20 @@
 	TEST	=> 0x3A
 }
 
+#subruledef aluop_ext
+{
+	ADD	=> 0x40
+	ADC	=> 0x41
+	SUB	=> 0x44
+	SBB	=> 0x45
+	AND	=> 0x54
+	OR	=> 0x55
+	XOR	=> 0x56
+	CMP	=> 0x58
+	CMPS	=> 0x59
+	TEST	=> 0x5A
+}
+
 #subruledef aluop_shift
 {
 	SHL	=> 0x29
@@ -117,6 +131,7 @@
 	{op: aluop_2}		{rX: register}, {rY: register}	=> op @ rY  @ rX
 	{op: aluop_shift}	{rX: register}, {Y: i4}		=> op @ Y   @ rX
 	{op: aluop_1}		{rX: register}			=> op @ 0x0 @ rX
+	{op: aluop_ext}		{rX: register}, {imm16: i16}	=> op @ 0x0 @ rX @ imm16
 	
 	BRK	=> 0xFE @ 0x00
 	HLT	=> 0xFF @ 0x00
