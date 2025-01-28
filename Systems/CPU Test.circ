@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project source="5.0.1-HC" version="1.0">
+<project source="5.0.3-HC" version="1.0">
   This file is intended to be loaded by Logisim-evolution (https://github.com/kevinawalsh/logisim-evolution).
 
   <lib desc="#Base" name="0">
     <tool name="Text Tool">
       <a name="font" val="SansSerif plain 12"/>
       <a name="halign" val="center"/>
-      <a name="text" val=""/>
+      <a name="text" val="text"/>
       <a name="valign" val="base"/>
     </tool>
   </lib>
   <lib desc="#Wiring" name="1">
     <tool name="Splitter">
       <a name="appear" val="center"/>
-      <a name="facing" val="west"/>
       <a name="fanout" val="16"/>
       <a name="incoming" val="16"/>
     </tool>
     <tool name="Probe">
-      <a name="facing" val="south"/>
+      <a name="facing" val="west"/>
     </tool>
     <tool name="Tunnel">
       <a name="width" val="4"/>
     </tool>
-    <tool name="Clock">
-      <a name="facing" val="south"/>
-    </tool>
     <tool name="Constant">
-      <a name="value" val="0x0"/>
-      <a name="width" val="8"/>
+      <a name="value" val="0x1"/>
     </tool>
     <tool name="Bit Extender">
       <a name="in_width" val="2"/>
@@ -120,6 +115,9 @@
       <a name="matrixcols" val="16"/>
       <a name="matrixrows" val="1"/>
     </tool>
+    <tool name="RGB Video">
+      <a name="fixed" val="0#888 RGB (24 bit)"/>
+    </tool>
   </lib>
   <lib desc="#Analog" name="7">
     <tool name="Pull Resistor">
@@ -132,6 +130,7 @@
       <a name="facing" val="south"/>
     </tool>
   </lib>
+  <lib desc="#Audio" name="10"/>
   <main name="main"/>
   <options>
     <a name="gateUndefined" val="ignore"/>
@@ -151,8 +150,8 @@
     <tool lib="0" name="Cutter Tool"/>
     <tool lib="0" name="Text Tool">
       <a name="font" val="SansSerif bold 24"/>
-      <a name="halign" val="center"/>
-      <a name="text" val=""/>
+      <a name="halign" val="left"/>
+      <a name="text" val="text"/>
       <a name="valign" val="base"/>
     </tool>
     <sep/>
@@ -160,7 +159,7 @@
       <a name="width" val="32"/>
     </tool>
     <tool lib="1" name="Pin">
-      <a name="facing" val="north"/>
+      <a name="facing" val="west"/>
       <a name="labelloc" val="east"/>
       <a name="type" val="output"/>
     </tool>
@@ -169,9 +168,11 @@
       <a name="size" val="30"/>
     </tool>
     <tool lib="2" name="OR Gate">
+      <a name="facing" val="north"/>
       <a name="size" val="30"/>
     </tool>
     <tool lib="2" name="XOR Gate">
+      <a name="facing" val="north"/>
       <a name="size" val="30"/>
     </tool>
     <tool lib="2" name="NAND Gate"/>
@@ -346,6 +347,16 @@
     <comp lib="1" loc="(2030,160)" name="Tunnel">
       <a name="label" val="DATA"/>
       <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(2030,290)" name="Splitter">
+      <a name="appear" val="center"/>
+      <a name="facing" val="west"/>
+      <a name="fanout" val="4"/>
+      <a name="incoming" val="4"/>
+    </comp>
+    <comp lib="1" loc="(2030,290)" name="Tunnel">
+      <a name="label" val="STEPPER"/>
+      <a name="width" val="4"/>
     </comp>
     <comp lib="1" loc="(2030,490)" name="Tunnel">
       <a name="label" val="DATA"/>
@@ -658,7 +669,7 @@
       <a name="width" val="16"/>
     </comp>
     <comp lib="1" loc="(60,410)" name="Constant">
-      <a name="value" val="0x0"/>
+      <a name="value" val="0x0000"/>
       <a name="width" val="16"/>
     </comp>
     <comp lib="1" loc="(60,430)" name="Constant">
@@ -697,7 +708,7 @@
     </comp>
     <comp lib="1" loc="(70,620)" name="Constant">
       <a name="facing" val="north"/>
-      <a name="value" val="0x0"/>
+      <a name="value" val="0x00"/>
       <a name="width" val="6"/>
     </comp>
     <comp lib="1" loc="(760,780)" name="Bit Extender">
@@ -828,7 +839,7 @@
     <comp lib="8" loc="(400,780)" name="BCD_to_7_Segment_decoder"/>
     <comp lib="8" loc="(450,780)" name="BCD_to_7_Segment_decoder"/>
     <comp lib="8" loc="(80,780)" name="Hex_to_7_Segment_decoder"/>
-    <comp lib="9" loc="(2010,80)" name="CH016M01"/>
+    <comp lib="9" loc="(2010,80)" name="CH016M01-SE"/>
     <comp loc="(1730,830)" name="Address Mapper"/>
     <comp loc="(200,470)" name="Address Mapper"/>
     <comp loc="(2020,490)" name="Interrupt Manager"/>
@@ -1362,6 +1373,7 @@
       <a name="width" val="4"/>
     </comp>
     <comp lib="1" loc="(610,730)" name="Constant">
+      <a name="value" val="0x1f"/>
       <a name="width" val="5"/>
     </comp>
     <comp lib="1" loc="(660,270)" name="Pin">
@@ -1609,7 +1621,9 @@
       <a name="fanout" val="4"/>
       <a name="incoming" val="4"/>
     </comp>
-    <comp lib="1" loc="(780,630)" name="Constant"/>
+    <comp lib="1" loc="(780,630)" name="Constant">
+      <a name="value" val="0x1"/>
+    </comp>
     <comp lib="1" loc="(820,710)" name="Pin">
       <a name="facing" val="north"/>
       <a name="label" val="RESET"/>
@@ -1746,7 +1760,9 @@
     <comp lib="1" loc="(360,690)" name="Pin">
       <a name="label" val="RE"/>
     </comp>
-    <comp lib="1" loc="(400,500)" name="Constant"/>
+    <comp lib="1" loc="(400,500)" name="Constant">
+      <a name="value" val="0x1"/>
+    </comp>
     <comp lib="1" loc="(510,480)" name="Pin">
       <a name="facing" val="west"/>
       <a name="label" val="Data Out"/>
@@ -1834,13 +1850,14 @@
       <text dominant-baseline="central" fill="#404040" font-family="SansSerif" font-size="10" text-anchor="start" x="85" y="330">Reset</text>
       <text dominant-baseline="central" font-family="SansSerif" font-size="10" text-anchor="middle" x="200" y="299">Timer Value</text>
       <text dominant-baseline="central" font-family="SansSerif" font-size="12" text-anchor="start" x="204" y="199">Missed Ticks</text>
-      <text dominant-baseline="central" font-family="SansSerif" font-size="12" text-anchor="start" x="258" y="220">Frequency</text>
       <text dominant-baseline="central" font-family="SansSerif" font-size="12" text-anchor="start" x="258" y="240">Reset Value</text>
       <text dominant-baseline="central" font-family="SansSerif" font-size="12" text-anchor="start" x="259" y="260">Tick Count</text>
       <text dominant-baseline="top" font-family="SansSerif" font-size="12" text-anchor="middle" x="205" y="75">Interrupt Manager</text>
       <visible-register height="20" path="/Register(1770,70)" stroke-width="0" value-font-family="Monospaced" value-font-size="20" value-font-weight="bold" width="53" x="147" y="190"/>
       <visible-register height="20" path="/Register(1120,1060)" stroke-width="0" value-font-family="Monospaced" value-font-size="20" value-font-weight="bold" width="53" x="200" y="230"/>
       <visible-register height="20" path="/Register(1120,1170)" stroke-width="0" value-font-family="Monospaced" value-font-size="20" value-font-weight="bold" width="53" x="147" y="230"/>
+      <visible-register height="20" path="/Interrupt Counter(1530,1100)/Register(970,330)" stroke-width="0" value-font-family="Monospaced" value-font-size="20" value-font-weight="bold" width="106" x="147" y="270"/>
+      <visible-register height="20" path="/Interrupt Counter(1540,1370)/Register(970,330)" stroke-width="0" value-font-family="Monospaced" value-font-size="20" value-font-weight="bold" width="106" x="147" y="250"/>
       <circ-port height="10" pin="2150,360" width="10" x="325" y="95"/>
       <circ-port height="10" pin="1260,170" width="10" x="325" y="115"/>
       <circ-port height="8" pin="1720,750" width="8" x="76" y="96"/>
@@ -1954,7 +1971,7 @@ Read Response:
       <a name="incoming" val="32"/>
     </comp>
     <comp lib="1" loc="(1260,1180)" name="Constant">
-      <a name="value" val="0x0"/>
+      <a name="value" val="0x00000000"/>
       <a name="width" val="32"/>
     </comp>
     <comp lib="1" loc="(1260,130)" name="Splitter">
@@ -1992,12 +2009,14 @@ Read Response:
       <a name="facing" val="east"/>
       <a name="label" val="PIN_RESET"/>
     </comp>
-    <comp lib="1" loc="(1360,1120)" name="Constant"/>
+    <comp lib="1" loc="(1360,1120)" name="Constant">
+      <a name="value" val="0x1"/>
+    </comp>
     <comp lib="1" loc="(1360,1140)" name="Constant">
       <a name="value" val="0x0"/>
     </comp>
     <comp lib="1" loc="(1370,1370)" name="Constant">
-      <a name="value" val="0x0"/>
+      <a name="value" val="0x00000000"/>
       <a name="width" val="32"/>
     </comp>
     <comp lib="1" loc="(1370,1390)" name="Constant">
@@ -2040,7 +2059,7 @@ Read Response:
       <a name="label" val="TIMER_ZERO"/>
     </comp>
     <comp lib="1" loc="(1640,90)" name="Constant">
-      <a name="value" val="0x0"/>
+      <a name="value" val="0x0000"/>
       <a name="width" val="16"/>
     </comp>
     <comp lib="1" loc="(1680,480)" name="Pin">
@@ -2051,6 +2070,7 @@ Read Response:
     </comp>
     <comp lib="1" loc="(1690,60)" name="Constant">
       <a name="facing" val="south"/>
+      <a name="value" val="0x1"/>
     </comp>
     <comp lib="1" loc="(1700,540)" name="Tunnel">
       <a name="label" val="RE"/>
@@ -2071,6 +2091,7 @@ Read Response:
       <a name="label" val="Reset"/>
     </comp>
     <comp lib="1" loc="(1720,750)" name="Pin">
+      <a name="behavior" val="pulldown"/>
       <a name="label" val="Data In"/>
       <a name="width" val="16"/>
     </comp>
@@ -2944,7 +2965,7 @@ Read Response:
       <a name="out_width" val="32"/>
     </comp>
     <comp lib="1" loc="(720,450)" name="Constant">
-      <a name="value" val="0x0"/>
+      <a name="value" val="0x00000000"/>
       <a name="width" val="32"/>
     </comp>
     <comp lib="1" loc="(780,440)" name="Pin">
