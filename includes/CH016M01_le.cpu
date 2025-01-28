@@ -45,12 +45,6 @@
 	ADC	=> 0x21
 	SUB	=> 0x24
 	SBB	=> 0x25
-	SHL	=> 0x28
-	SAL	=> 0x2A
-	SHR	=> 0x2C
-	SAR	=> 0x2F
-	ROL	=> 0x30
-	ROR	=> 0x32
 	AND	=> 0x34
 	OR	=> 0x35
 	XOR	=> 0x36
@@ -59,20 +53,15 @@
 	TEST	=> 0x3A
 }
 
-#subruledef aluop_ext
+#subruledef aluop_shift_2
 {
-	ADD	=> 0x40
-	ADC	=> 0x41
-	SUB	=> 0x44
-	SBB	=> 0x45
-	AND	=> 0x54
-	OR	=> 0x55
-	XOR	=> 0x56
-	CMP	=> 0x58
-	CMPS	=> 0x59
-	TEST	=> 0x5A
+	SHL	=> 0x28
+	SAL	=> 0x2A
+	SHR	=> 0x2C
+	SAR	=> 0x2F
+	ROL	=> 0x30
+	ROR	=> 0x32
 }
-
 #subruledef aluop_shift
 {
 	SHL	=> 0x29
@@ -129,9 +118,11 @@
 	MOV	{rX: register}, {rY: register}	=> rY  @ rX @ 0x16
 	
 	{op: aluop_2}		{rX: register}, {rY: register}	=> rY  @ rX @ op
+	{op: aluop_shift_2}	{rX: register}, {rY: register}	=> rY  @ rX @ op
 	{op: aluop_shift}	{rX: register}, {Y: i4}		=> Y   @ rX @ op
 	{op: aluop_1}		{rX: register}			=> 0x0 @ rX @ op
-	{op: aluop_ext}		{rX: register}, {imm16: i16}	=> 0x0 @ rX @ op @ le(imm16)
+	
+	{op: aluop_2}		{rX: register}, {imm16: i16}	=> 0x0 @ rX @ (op + 0x20)`8 @ le(imm16)
 	
 	BRK	=> 0x00 @ 0xFE
 	HLT	=> 0x00 @ 0xFF
